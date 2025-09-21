@@ -2,6 +2,7 @@ import { FiveSecondChallengeProvider } from "~/mode/five-second-challenge.provid
 import type { Route } from "./+types/home";
 import MagicCube from "~/cube";
 import "~/services/magic-cube";
+import { StandardChallengeProvider } from "~/mode/standard";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -12,8 +13,10 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   return (
-    <FiveSecondChallengeProvider>
-      <MagicCube />
-    </FiveSecondChallengeProvider>
+    <StandardChallengeProvider>
+      <FiveSecondChallengeProvider>
+        <MagicCube />
+      </FiveSecondChallengeProvider>
+    </StandardChallengeProvider>
   );
 }

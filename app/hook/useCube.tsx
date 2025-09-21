@@ -48,10 +48,17 @@ function useCube() {
           setConnected(true);
         } else if (event.type == "MOVE") {
           magicCube.pushQueue(event.move as Move);
+        } else if (event.type === "FACELETS") {
+          if (
+            event.facelets ===
+            "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB"
+          ) {
+            magicCube.updateCompleteness(true);
+          } else {
+            magicCube.updateCompleteness(false);
+          }
         }
       });
-
-      conn.sendCubeCommand({ type: "REQUEST_HARDWARE" });
     } catch (e) {
       console.error("Connection failed", e);
       alert("Connection failed: " + (e as Error).message);

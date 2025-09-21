@@ -4,10 +4,11 @@ import { delay } from "utils/delay";
 import type { Mesh } from "three";
 
 class MagicCube {
+  private complated: boolean = false;
   private queue: Move[] = [];
   private history: Move[] = [];
 
-  private counter: number = 0;
+  private stepCount: number = 0;
   private isCounting: boolean = false;
 
   constructor() {}
@@ -16,25 +17,36 @@ class MagicCube {
     this.queue.push(q);
 
     if (this.isCounting) {
-      this.counter += 1;
+      this.stepCount += 1;
     }
   }
 
+  // Status
+  public updateCompleteness(bool: boolean) {
+    this.complated = bool;
+  }
+
+  public isComplete() {
+    return this.complated;
+  }
+
+  // For Step Counting
   public start() {
     this.isCounting = true;
-    this.counter = 0;
+    this.stepCount = 0;
   }
   public stopCount() {
     this.isCounting = false;
   }
   public resetCount() {
     this.isCounting = false;
-    this.counter = 0;
+    this.stepCount = 0;
   }
   public getCounter() {
-    return this.counter;
+    return this.stepCount;
   }
 
+  // For UI
   public async move(ref: Mesh, rotationGroup: Mesh) {
     const callback = this.move.bind(this, ref, rotationGroup);
 
@@ -46,11 +58,6 @@ class MagicCube {
 
     const move = this.queue.shift()!;
     this.history.push(move);
-
-    // if (isActive) {
-    //   console.log(isActive);
-    //   setChallengeCount((count) => count + 1);
-    // }
 
     // Forward rotation for back face
     if (move === "L") {
@@ -85,11 +92,11 @@ class MagicCube {
       this.rotate(ref, rotationGroup, "y", -0.5, -1, callback);
     }
     // Reverse rotation for up face
-    if (move === "U'") {
+    if (move === "U") {
       this.rotate(ref, rotationGroup, "y", 0.5, -1, callback);
     }
     // Forward rotation for up face
-    if (move === "U") {
+    if (move === "U'") {
       this.rotate(ref, rotationGroup, "y", 0.5, 1, callback);
     }
     // Reverse rotation for front face

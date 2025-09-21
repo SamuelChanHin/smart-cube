@@ -1,7 +1,11 @@
 :local {
   .container {
+    background-color: black;
     height: 100dvh;
     width: 100vw;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   .topBar {
@@ -19,6 +23,7 @@
     border: 1px solid white;
     border-radius: 8px;
     padding: 8px;
+    color: white;
 
     &.disabled {
       opacity: 0.5;
@@ -27,18 +32,20 @@
   }
 
   .fullscreen {
-    background-color: black;
-    height: 70%;
+    height: 80%;
     width: 100%;
   }
 
   .panel {
-    color: white;
+    min-height: 250px;
     padding: 16px;
+    overflow: auto;
 
     .gameModePanel {
       margin-bottom: 12px;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
     }
 
     .rubikBtnPanel {
