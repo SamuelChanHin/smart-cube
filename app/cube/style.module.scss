@@ -1,0 +1,47 @@
+:local {
+  .container {
+    height: 100dvh;
+    width: 100vw;
+  }
+
+  .topBar {
+    position: absolute;
+    z-index: 10;
+    padding: 16px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .actionBtn {
+    cursor: pointer;
+    border: 1px solid white;
+    border-radius: 8px;
+    padding: 8px;
+  }
+
+  .fullscreen {
+    background-color: black;
+    height: 70%;
+    width: 100%;
+  }
+
+  .panel {
+    color: white;
+    padding: 16px;
+
+    .gameModePanel {
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .rubikBtnPanel {
+      display: flex;
+      justify-content: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  }
+}
