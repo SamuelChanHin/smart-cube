@@ -2,8 +2,13 @@ import { useFiveSecondChallenge } from "~/mode/five-second-challenge.provider";
 import style from "./style.module.scss";
 import magicCube from "~/services/magic-cube";
 import { KeyToMoveMap } from "utils/cube-move";
+import clsx from "clsx";
 
-function Panel() {
+type Props = {
+  connected: boolean;
+};
+
+function Panel({ connected }: Props) {
   const {
     startChallenge,
     timeLeft,
@@ -16,11 +21,23 @@ function Panel() {
 
   return (
     <div className={style.panel}>
+      {(isActive || isPrestart) && (
+        <div className={style.overlay}>
+          <div className={style.overlayContent}>
+            {isPrestart && `Starting in ${prestartTimeLeft}`}
+            {isActive && `Time Left: ${timeLeft}`}
+          </div>
+        </div>
+      )}
       <div className={style.gameModePanel}>
-        <button className={style.actionBtn} onClick={startChallenge}>
-          {isActive && `Time Left: ${timeLeft}`}
-          {isPrestart && `Starting in ${prestartTimeLeft}`}
-          {!isActive && !isPrestart && "Start 5 Second Challenge"}
+        <button
+          className={clsx(style.actionBtn, {
+            [style.disabled]: !connected || isActive || isPrestart,
+          })}
+          disabled={!connected || isActive || isPrestart}
+          onClick={startChallenge}
+        >
+          {"5 Seconds Challenge"}
           <p>
             Count: {count} {tps > 0 && <span>TPS: {tps.toFixed(2)}</span>}
           </p>

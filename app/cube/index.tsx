@@ -8,7 +8,7 @@ import style from "./style.module.scss";
 import { useCubeKeyboard } from "~/hook/useCubeKeyboard";
 
 function MagicCube() {
-  const { connect, cubeName, loading } = useCube();
+  const { connect, cubeName, loading, connected } = useCube();
   useCubeKeyboard();
 
   const childRef = useRef<RubikHandle>(null);
@@ -42,7 +42,7 @@ function MagicCube() {
         </Canvas>
       </div>
 
-      <Panel />
+      <Panel connected={connected} />
     </div>
   );
 }

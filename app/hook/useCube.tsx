@@ -27,6 +27,7 @@ const customMacAddressProvider: MacAddressProvider = async (
 
 function useCube() {
   const [loading, setLoading] = useState(false);
+  const [connected, setConnected] = useState(false);
   const [cubeName, setCubeName] = useState<string | undefined>(undefined);
 
   const connect = async () => {
@@ -44,6 +45,7 @@ function useCube() {
 
           setCubeName(event.hardwareName);
           setLoading(false);
+          setConnected(true);
         } else if (event.type == "MOVE") {
           magicCube.pushQueue(event.move as Move);
         }
@@ -61,6 +63,7 @@ function useCube() {
     connect,
     cubeName,
     loading,
+    connected,
   };
 }
 
