@@ -29,7 +29,7 @@ export const StandardChallengeProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const [isActive, setIsActive] = useState(false);
-  const [prestartTimeLeft, setPrestartTimeLeft] = useState(3);
+  const [prestartTimeLeft, setPrestartTimeLeft] = useState(15);
   const [isPrestart, setIsPrestart] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(0);
   const [endTime, setEndTime] = useState<number | null>(0);
@@ -37,10 +37,8 @@ export const StandardChallengeProvider: React.FC<{
   // Ready time countdown
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (isPrestart && prestartTimeLeft > 0) {
-      // Ready
-      timer = setTimeout(() => setPrestartTimeLeft(prestartTimeLeft - 1), 1000);
-    } else if (isPrestart && prestartTimeLeft === 0) {
+
+    if ((isPrestart && prestartTimeLeft === 0) || magicCube.isMoving()) {
       // Go
       setIsPrestart(false);
       setIsActive(true);
@@ -48,6 +46,12 @@ export const StandardChallengeProvider: React.FC<{
       setEndTime(Date.now());
       magicCube.start();
     }
+
+    if (isPrestart && prestartTimeLeft > 0) {
+      // Ready
+      timer = setTimeout(() => setPrestartTimeLeft(prestartTimeLeft - 1), 1000);
+    }
+
     return () => clearTimeout(timer);
   }, [isPrestart, prestartTimeLeft]);
 
@@ -72,12 +76,13 @@ export const StandardChallengeProvider: React.FC<{
   };
 
   const startChallenge = () => {
+    magicCube.resetCount();
     setIsPrestart(true);
-    setPrestartTimeLeft(3);
+    setPrestartTimeLeft(15);
     setIsActive(false);
     setStartTime(0);
     setEndTime(0);
-    magicCube.resetCount();
+    magicCube.lock();
   };
 
   const timer = startTime && endTime ? +(endTime - startTime) / 1000 : 0;

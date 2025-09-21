@@ -10,6 +10,8 @@ class MagicCube {
 
   private stepCount: number = 0;
   private isCounting: boolean = false;
+  private isLocked: boolean = false;
+  private isEarlyMove: boolean = false;
 
   constructor() {}
 
@@ -18,6 +20,10 @@ class MagicCube {
 
     if (this.isCounting) {
       this.stepCount += 1;
+    }
+
+    if (this.isLocked) {
+      this.isEarlyMove = true;
     }
   }
 
@@ -30,17 +36,28 @@ class MagicCube {
     return this.complated;
   }
 
+  public lock() {
+    this.isLocked = true;
+  }
+  public isMoving() {
+    return this.isEarlyMove;
+  }
+
   // For Step Counting
   public start() {
     this.isCounting = true;
+    this.isLocked = false;
     this.stepCount = 0;
   }
   public stopCount() {
     this.isCounting = false;
+    this.isEarlyMove = false;
   }
   public resetCount() {
     this.isCounting = false;
     this.stepCount = 0;
+    this.isLocked = false;
+    this.isEarlyMove = false;
   }
   public getCounter() {
     return this.stepCount;
