@@ -49,6 +49,7 @@ function useCube() {
         } else if (event.type == "MOVE") {
           magicCube.pushQueue(event.move as Move);
         } else if (event.type === "FACELETS") {
+          console.log(event.facelets);
           if (
             event.facelets ===
             "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB"
@@ -59,6 +60,9 @@ function useCube() {
           }
         }
       });
+
+      await conn.sendCubeCommand({ type: "REQUEST_HARDWARE" });
+      await conn.sendCubeCommand({ type: "REQUEST_FACELETS" });
     } catch (e) {
       console.error("Connection failed", e);
       alert("Connection failed: " + (e as Error).message);
