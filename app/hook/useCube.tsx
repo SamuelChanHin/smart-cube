@@ -1,5 +1,5 @@
 import { connectGanCube, type MacAddressProvider } from "gan-web-bluetooth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Move } from "~/cube/types";
 import magicCube from "~/services/magic-cube";
 

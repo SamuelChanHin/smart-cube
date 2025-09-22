@@ -15,9 +15,14 @@ export type RubikHandle = {
 };
 
 const Rubik = forwardRef<RubikHandle, Props>(({ quaternion }, childRef) => {
+  // ref for entire cube
+  const cubeRef = useRef<Mesh | null>(null);
+
+  // ref for rotation group attach
   const ref = useRef<Mesh | null>(null);
+
+  // ref for rotation group
   const rotationGroup = useRef<Mesh | null>(null);
-  const { camera } = useThree();
 
   useImperativeHandle(childRef, () => ({
     resetAll: () => {
@@ -41,9 +46,9 @@ const Rubik = forwardRef<RubikHandle, Props>(({ quaternion }, childRef) => {
 
       const euler = new THREE.Euler().setFromQuaternion(quat, "XYZ"); // You can use other rotation orders if needed
 
-      ref.current!.rotation.x = euler.x;
-      ref.current!.rotation.y = euler.y;
-      ref.current!.rotation.z = euler.z;
+      cubeRef.current!.rotation.x = euler.x;
+      cubeRef.current!.rotation.y = euler.y;
+      cubeRef.current!.rotation.z = euler.z;
     }
   });
 
@@ -58,16 +63,21 @@ const Rubik = forwardRef<RubikHandle, Props>(({ quaternion }, childRef) => {
   // instead of individually rotating them on their own axis.
   return (
     <>
-      <group ref={ref}>
-        {[...Array(3).keys()].map((x) =>
-          [...Array(3).keys()].map((y) =>
-            [...Array(3).keys()].map((z) => (
-              <Cube key={x + y * 3 + z * 9} position={[x - 1, y - 1, z - 1]} />
-            ))
-          )
-        )}
+      <group ref={cubeRef}>
+        <group ref={ref}>
+          {[...Array(3).keys()].map((x) =>
+            [...Array(3).keys()].map((y) =>
+              [...Array(3).keys()].map((z) => (
+                <Cube
+                  key={x + y * 3 + z * 9}
+                  position={[x - 1, y - 1, z - 1]}
+                />
+              ))
+            )
+          )}
+        </group>
+        <group ref={rotationGroup} />
       </group>
-      <group ref={rotationGroup} />
     </>
   );
 });
