@@ -2,31 +2,36 @@ import React from "react";
 import style from "../style.module.scss";
 import clsx from "clsx";
 import { useStandardChallenge } from "~/magic-cube/providers/standard";
-import magicCube from "~/magic-cube/services/magic-cube";
 
 type Props = {
   connected: boolean;
 };
 
 function StandardChallengeButton({ connected }: Props) {
-  const { startChallenge, isActive, timer, tps, isPrestart, prestartTimeLeft } =
-    useStandardChallenge();
+  const {
+    startChallenge,
+    isStarted,
+    timer,
+    tps,
+    isPrestart,
+    prestartTimeLeft,
+  } = useStandardChallenge();
 
   return (
     <>
-      {(isActive || isPrestart) && (
+      {(isStarted || isPrestart) && (
         <div className={style.overlay}>
           <div className={style.overlayContent}>
             {isPrestart && `Starting in ${prestartTimeLeft}`}
-            {isActive && `Time: ${timer}s`}
+            {isStarted && `Time: ${timer}s`}
           </div>
         </div>
       )}
       <button
         className={clsx(style.actionBtn, {
-          [style.disabled]: !connected || isActive || isPrestart,
+          [style.disabled]: !connected || isStarted || isPrestart,
         })}
-        disabled={!connected || isActive || isPrestart}
+        disabled={!connected || isStarted || isPrestart}
         onClick={startChallenge}
       >
         {"Standard"}

@@ -2,76 +2,79 @@ import type { Move } from "../types/types";
 import magicCube3d from "./magic-cube-3d";
 
 class MagicCube {
-  private complated: boolean = false;
-  private queue: Move[] = [];
+  // private stepCount: number = 0;
+  // private isCounting: boolean = false;
+  // private isLocked: boolean = false;
+  // private isEarlyMove: boolean = false;
 
-  private stepCount: number = 0;
-  private isCounting: boolean = false;
-  private isLocked: boolean = false;
-  private isEarlyMove: boolean = false;
-  private subscribeQueueCallbacks: (newQueue: Move[]) => void = () => undefined;
+  private queue: Move[] = [];
+  private isCompleted: boolean = false;
+  private subscribeQueueCallbacks: ((newQueue: Move) => void)[] = [];
 
   constructor() {}
 
-  subscribeQueue(callback: (newQueue: Move[]) => void) {
-    this.subscribeQueueCallbacks = callback;
+  // Subscribe Event
+  subscribeQueue(callback: (newQueue: Move) => void) {
+    this.subscribeQueueCallbacks.push(callback);
+  }
+
+  unsubscribeQueue(callback: (newQueue: Move) => void) {
+    this.subscribeQueueCallbacks = this.subscribeQueueCallbacks.filter(
+      (cb) => cb !== callback
+    );
+  }
+
+  // Queue
+  public pushQueues(qs: Move[]) {
+    qs.forEach(this.pushQueue);
   }
 
   public pushQueue(q: Move) {
     magicCube3d.pushQueue(q); // For UI 3D cube
 
     this.queue.push(q);
-    this.subscribeQueueCallbacks(this.queue);
-
-    if (this.isCounting) {
-      this.stepCount += 1;
-    }
-
-    if (this.isLocked) {
-      this.isEarlyMove = true;
-    }
+    this.subscribeQueueCallbacks.forEach((callback) => callback(q));
   }
 
   public clearQueue() {
     this.queue = [];
-    this.subscribeQueueCallbacks(this.queue);
   }
 
   // Status
   public updateCompleteness(bool: boolean) {
-    this.complated = bool;
+    this.isCompleted = bool;
   }
 
   public isComplete() {
-    return this.complated;
+    return this.isCompleted;
   }
 
-  public lock() {
-    this.isLocked = true;
-  }
-  public isMoving() {
-    return this.isEarlyMove;
-  }
+  // public lock() {
+  //   this.isLocked = true;
+  // }
+  // public isMoving() {
+  //   return this.isEarlyMove;
+  // }
 
-  // For Step Counting
-  public start() {
-    this.isCounting = true;
-    this.isLocked = false;
-    this.stepCount = 0;
-  }
-  public stopCount() {
-    this.isCounting = false;
-    this.isEarlyMove = false;
-  }
-  public resetCount() {
-    this.isCounting = false;
-    this.stepCount = 0;
-    this.isLocked = false;
-    this.isEarlyMove = false;
-  }
-  public getCounter() {
-    return this.stepCount;
-  }
+  // // For Step Counting
+  // public start() {
+  //   this.isCounting = true;
+  //   this.isLocked = false;
+  //   this.stepCount = 0;
+  // }
+  // public stopCount() {
+  //   this.isCounting = false;
+  //   this.isEarlyMove = false;
+  // }
+  // public resetCount() {
+  //   this.isCounting = false;
+  //   this.stepCount = 0;
+  //   this.isLocked = false;
+  //   this.isEarlyMove = false;
+  // }
+  // public getCounter() {
+  //   return this.stepCount;
+  // }
 }
 
 export default new MagicCube();

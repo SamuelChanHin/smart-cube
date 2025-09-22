@@ -1,14 +1,13 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { useCubeKeyboard } from "~/magic-cube/hook/useCubeKeyboard";
 import Panel from "./panel";
 import { useCube } from "./providers/magic-cube.provider";
 import Rubik, { type RubikHandle } from "./rubik";
+import magicCube from "./services/magic-cube";
 import style from "./style.module.scss";
 import TopBar from "./topbar";
-import magicCube from "./services/magic-cube";
-import type { Move } from "./types/types";
 
 function MagicCube() {
   const { resetCube } = useCube();
@@ -29,20 +28,6 @@ function MagicCube() {
     magicCube.clearQueue();
   };
 
-  // Observe magicCube.queue changes using a state and effect
-  const [queue, setQueue] = useState<Move[]>([]);
-
-  useEffect(() => {
-    // Assume magicCube exposes an event emitter or subscribe method
-    const handleQueueChange = (newQueue: Move[]) => {
-      setQueue([...newQueue]);
-    };
-
-    // Example: magicCube.on('queueChange', handleQueueChange)
-    // Replace with your actual subscription logic
-    magicCube.subscribeQueue(handleQueueChange);
-  }, []);
-
   return (
     <div className={style.container}>
       <TopBar reset={reset} />
@@ -55,7 +40,7 @@ function MagicCube() {
           <Rubik ref={rubikRef} />
         </Canvas>
       </div>
-      {queue.join(", ")}
+
       <Panel />
     </div>
   );

@@ -1,12 +1,19 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import magicCube from "~/magic-cube/services/magic-cube";
+import type { Move } from "../types/types";
 
 const StandardChallengeContext = createContext<
   StandardChallengeContextType | undefined
 >(undefined);
 
 type StandardChallengeContextType = {
-  isActive: boolean;
+  isStarted: boolean;
   startChallenge: () => void;
   count: number;
   timer: number;
@@ -28,27 +35,53 @@ export const useStandardChallenge = () => {
 export const StandardChallengeProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const [isActive, setIsActive] = useState(false);
+  const [isStarted, setIsStarted] = useState(false);
   const [prestartTimeLeft, setPrestartTimeLeft] = useState(15);
   const [isPrestart, setIsPrestart] = useState(false);
-  const [startTime, setStartTime] = useState<number | null>(0);
-  const [endTime, setEndTime] = useState<number | null>(0);
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [endTime, setEndTime] = useState<number | null>(null);
 
-  // Ready time countdown
+  // Observe magicCube.queue changes using a state and effect
+  const [queue, setQueue] = useState<Move[]>([]);
+
+  // Assume magicCube exposes an event emitter or subscribe method
+  const handleQueueChange = useCallback(
+    (newMove: Move) => {
+      setQueue((prev) => [...prev, newMove]);
+    },
+    [setQueue]
+  );
+
+  const startChallenge = () => {
+    setPrestartTimeLeft(15);
+    setIsPrestart(true);
+    setIsStarted(false);
+    setStartTime(null);
+    setEndTime(null);
+    setQueue([]);
+    magicCube.subscribeQueue(handleQueueChange); // Subscribe to queue changes can early start, not need wait for preset
+  };
+
+  const start = () => {
+    setIsPrestart(false);
+    setIsStarted(true);
+    setStartTime(Date.now());
+    setEndTime(Date.now());
+  };
+
+  const end = () => {
+    setIsStarted(false);
+    magicCube.unsubscribeQueue(handleQueueChange);
+  };
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
-
-    if ((isPrestart && prestartTimeLeft === 0) || magicCube.isMoving()) {
-      // Go
-      setIsPrestart(false);
-      setIsActive(true);
-      setStartTime(Date.now());
-      setEndTime(Date.now());
-      magicCube.start();
+    if ((isPrestart && prestartTimeLeft === 0) || queue.length > 0) {
+      start();
+      return () => clearTimeout(timer);
     }
 
     if (isPrestart && prestartTimeLeft > 0) {
-      // Ready
       timer = setTimeout(() => setPrestartTimeLeft(prestartTimeLeft - 1), 1000);
     }
 
@@ -58,46 +91,30 @@ export const StandardChallengeProvider: React.FC<{
   // Start time count
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (isActive) {
+    if (isStarted) {
       timer = setTimeout(() => {
         if (magicCube.isComplete()) {
-          endChallenge();
+          end();
+          return () => clearTimeout(timer);
         }
 
         setEndTime(Date.now());
       }, 10); // update every 10ms
     }
     return () => clearTimeout(timer);
-  }, [isActive, endTime]);
-
-  const endChallenge = () => {
-    setIsActive(false);
-    magicCube.stopCount();
-  };
-
-  const startChallenge = () => {
-    magicCube.resetCount();
-    setIsPrestart(true);
-    setPrestartTimeLeft(15);
-    setIsActive(false);
-    setStartTime(0);
-    setEndTime(0);
-    magicCube.lock();
-  };
+  }, [isStarted, endTime]);
 
   const timer = startTime && endTime ? +(endTime - startTime) / 1000 : 0;
   const tps =
-    startTime && endTime && magicCube.getCounter() > 0
-      ? magicCube.getCounter() / timer
-      : 0;
+    startTime && endTime && queue.length > 0 ? queue.length / timer : 0;
 
   return (
     <StandardChallengeContext.Provider
       value={{
-        isActive,
+        isStarted,
         timer,
         startChallenge,
-        count: magicCube.getCounter(),
+        count: queue.length,
         tps,
         prestartTimeLeft,
         isPrestart,

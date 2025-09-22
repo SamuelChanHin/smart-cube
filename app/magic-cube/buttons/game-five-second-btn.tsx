@@ -11,7 +11,7 @@ function FiveSecondChallengeButton({ connected }: Props) {
   const {
     startChallenge,
     timeLeft,
-    isActive,
+    isStarted,
     isPrestart,
     prestartTimeLeft,
     count,
@@ -20,19 +20,19 @@ function FiveSecondChallengeButton({ connected }: Props) {
 
   return (
     <>
-      {(isActive || isPrestart) && (
+      {(isStarted || isPrestart) && (
         <div className={style.overlay}>
           <div className={style.overlayContent}>
             {isPrestart && `Starting in ${prestartTimeLeft}`}
-            {isActive && `Time Left: ${timeLeft}`}
+            {isStarted && `Time Left: ${timeLeft}`}
           </div>
         </div>
       )}
       <button
         className={clsx(style.actionBtn, {
-          [style.disabled]: !connected || isActive || isPrestart,
+          // [style.disabled]: !connected || isStarted || isPrestart,
         })}
-        disabled={!connected || isActive || isPrestart}
+        // disabled={!connected || isStarted || isPrestart}
         onClick={startChallenge}
       >
         {"5 Seconds Challenge"}
