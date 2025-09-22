@@ -2,12 +2,14 @@ import React from "react";
 import style from "../style.module.scss";
 import clsx from "clsx";
 import { useStandardChallenge } from "~/magic-cube/providers/standard";
+import { useCube } from "../providers/magic-cube.provider";
 
 type Props = {
   connected: boolean;
 };
 
 function StandardChallengeButton({ connected }: Props) {
+  const { isCompleted } = useCube();
   const {
     startChallenge,
     isStarted,
@@ -29,9 +31,10 @@ function StandardChallengeButton({ connected }: Props) {
       )}
       <button
         className={clsx(style.actionBtn, {
-          [style.disabled]: !connected || isStarted || isPrestart,
+          [style.disabled]:
+            !connected || isCompleted || isStarted || isPrestart,
         })}
-        disabled={!connected || isStarted || isPrestart}
+        disabled={!connected || isCompleted || isStarted || isPrestart}
         onClick={startChallenge}
       >
         {"Standard"}

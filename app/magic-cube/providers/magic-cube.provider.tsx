@@ -46,12 +46,14 @@ type CubeContextType = {
   connected: boolean;
   cubeName?: string;
   quaternion: { x: number; y: number; z: number; w: number } | null;
+  isCompleted: boolean;
 };
 
 const CubeContext = createContext<CubeContextType | undefined>(undefined);
 
 export const CubeProvider = ({ children }: { children: ReactNode }) => {
   const [conn, setConn] = useState<GanCubeConnection | null>(null);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const [connecting, setConnecting] = useState(false);
   const [connected, setConnected] = useState(false);
@@ -112,9 +114,9 @@ export const CubeProvider = ({ children }: { children: ReactNode }) => {
 
   const handleFaceletsEvent = (facelets: string) => {
     if (facelets === INITIAL_FACELETS) {
-      magicCube.updateCompleteness(true);
+      setIsCompleted(true);
     } else {
-      magicCube.updateCompleteness(false);
+      setIsCompleted(false);
     }
   };
 
@@ -163,6 +165,7 @@ export const CubeProvider = ({ children }: { children: ReactNode }) => {
         connecting,
         connected,
         quaternion,
+        isCompleted,
       }}
     >
       {children}

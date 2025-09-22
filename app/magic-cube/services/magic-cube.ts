@@ -8,7 +8,6 @@ class MagicCube {
   // private isEarlyMove: boolean = false;
 
   private queue: Move[] = [];
-  private isCompleted: boolean = false;
   private subscribeQueueCallbacks: ((newQueue: Move) => void)[] = [];
 
   constructor() {}
@@ -38,15 +37,6 @@ class MagicCube {
 
   public clearQueue() {
     this.queue = [];
-  }
-
-  // Status
-  public updateCompleteness(bool: boolean) {
-    this.isCompleted = bool;
-  }
-
-  public isComplete() {
-    return this.isCompleted;
   }
 
   // public lock() {

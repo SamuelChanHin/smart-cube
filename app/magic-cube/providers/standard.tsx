@@ -7,6 +7,7 @@ import {
 } from "react";
 import magicCube from "~/magic-cube/services/magic-cube";
 import type { Move } from "../types/types";
+import { useCube } from "./magic-cube.provider";
 
 const StandardChallengeContext = createContext<
   StandardChallengeContextType | undefined
@@ -35,6 +36,7 @@ export const useStandardChallenge = () => {
 export const StandardChallengeProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
+  const { isCompleted } = useCube();
   const [isStarted, setIsStarted] = useState(false);
   const [prestartTimeLeft, setPrestartTimeLeft] = useState(15);
   const [isPrestart, setIsPrestart] = useState(false);
@@ -93,7 +95,7 @@ export const StandardChallengeProvider: React.FC<{
     let timer: NodeJS.Timeout;
     if (isStarted) {
       timer = setTimeout(() => {
-        if (magicCube.isComplete()) {
+        if (isCompleted) {
           end();
           return () => clearTimeout(timer);
         }
