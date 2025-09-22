@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import magicCube from "~/services/magic-cube";
+import magicCube from "~/magic-cube/services/magic-cube";
 
 const FiveSecondChallengeContext = createContext<
   FiveSecondChallengeContextType | undefined

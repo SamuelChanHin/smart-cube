@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { KeyToMoveMap } from "utils/cube-move";
-import magicCube from "~/services/magic-cube";
+import magicCube from "~/magic-cube/services/magic-cube";
 
 export const useCubeKeyboard = () => {
   useEffect(() => {

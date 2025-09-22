@@ -1,69 +1,17 @@
-import type { Move } from "~/cube/types";
 import JEASINGS, { JEasing } from "jeasings";
-import { delay } from "utils/delay";
 import type { Mesh } from "three";
+import { delay } from "utils/delay";
+import type { Move } from "../types/types";
 
-class MagicCube {
-  private complated: boolean = false;
+class MagicCube3DService {
+  // This queue only for 3D cube rotation
   private queue: Move[] = [];
-  private history: Move[] = [];
 
-  private stepCount: number = 0;
-  private isCounting: boolean = false;
-  private isLocked: boolean = false;
-  private isEarlyMove: boolean = false;
-
-  constructor() {}
-
+  // after push to queue, will automatically display in 3D UI
   public pushQueue(q: Move) {
     this.queue.push(q);
-
-    if (this.isCounting) {
-      this.stepCount += 1;
-    }
-
-    if (this.isLocked) {
-      this.isEarlyMove = true;
-    }
   }
 
-  // Status
-  public updateCompleteness(bool: boolean) {
-    this.complated = bool;
-  }
-
-  public isComplete() {
-    return this.complated;
-  }
-
-  public lock() {
-    this.isLocked = true;
-  }
-  public isMoving() {
-    return this.isEarlyMove;
-  }
-
-  // For Step Counting
-  public start() {
-    this.isCounting = true;
-    this.isLocked = false;
-    this.stepCount = 0;
-  }
-  public stopCount() {
-    this.isCounting = false;
-    this.isEarlyMove = false;
-  }
-  public resetCount() {
-    this.isCounting = false;
-    this.stepCount = 0;
-    this.isLocked = false;
-    this.isEarlyMove = false;
-  }
-  public getCounter() {
-    return this.stepCount;
-  }
-
-  // For UI
   public async move(ref: Mesh, rotationGroup: Mesh) {
     const callback = this.move.bind(this, ref, rotationGroup);
 
@@ -74,7 +22,6 @@ class MagicCube {
     }
 
     const move = this.queue.shift()!;
-    this.history.push(move);
 
     // Forward rotation for back face
     if (move === "L") {
@@ -219,4 +166,6 @@ class MagicCube {
   };
 }
 
-export default new MagicCube();
+const magicCube3d = new MagicCube3DService();
+
+export default magicCube3d;

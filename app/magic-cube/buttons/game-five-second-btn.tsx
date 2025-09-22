@@ -1,5 +1,5 @@
 import React from "react";
-import { useFiveSecondChallenge } from "~/mode/five-second-challenge.provider";
+import { useFiveSecondChallenge } from "~/magic-cube/providers/five-second-challenge.provider";
 import style from "../style.module.scss";
 import clsx from "clsx";
 

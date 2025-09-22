@@ -1,8 +1,8 @@
 import React from "react";
 import style from "../style.module.scss";
 import clsx from "clsx";
-import { useStandardChallenge } from "~/mode/standard";
-import magicCube from "~/services/magic-cube";
+import { useStandardChallenge } from "~/magic-cube/providers/standard";
+import magicCube from "~/magic-cube/services/magic-cube";
 
 type Props = {
   connected: boolean;

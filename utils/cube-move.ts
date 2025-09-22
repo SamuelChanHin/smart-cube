@@ -1,5 +1,4 @@
-import type { Move } from "~/cube/types";
-import { keyboardClick } from "./kayboard";
+import type { Move } from "~/modules/types";
 
 const KeyToMoveMap: Record<string, Move> = {
   q: "L",
@@ -16,10 +15,4 @@ const KeyToMoveMap: Record<string, Move> = {
   v: "B'",
 } as const;
 
-type KeyType = keyof typeof KeyToMoveMap;
-
-function cubeMove(key: KeyType) {
-  keyboardClick(key);
-}
-
-export { KeyToMoveMap, cubeMove };
+export { KeyToMoveMap };

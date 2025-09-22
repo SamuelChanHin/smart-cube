@@ -1,8 +1,9 @@
-import { FiveSecondChallengeProvider } from "~/mode/five-second-challenge.provider";
+import { FiveSecondChallengeProvider } from "~/magic-cube/providers/five-second-challenge.provider";
 import type { Route } from "./+types/home";
-import MagicCube from "~/cube";
-import "~/services/magic-cube";
-import { StandardChallengeProvider } from "~/mode/standard";
+import "~/magic-cube/services/magic-cube";
+import { StandardChallengeProvider } from "~/magic-cube/providers/standard";
+import MagicCube from "~/magic-cube";
+import { CubeProvider } from "~/magic-cube/providers/magic-cube.provider";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -13,10 +14,12 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   return (
-    <StandardChallengeProvider>
-      <FiveSecondChallengeProvider>
-        <MagicCube />
-      </FiveSecondChallengeProvider>
-    </StandardChallengeProvider>
+    <CubeProvider>
+      <StandardChallengeProvider>
+        <FiveSecondChallengeProvider>
+          <MagicCube />
+        </FiveSecondChallengeProvider>
+      </StandardChallengeProvider>
+    </CubeProvider>
   );
 }

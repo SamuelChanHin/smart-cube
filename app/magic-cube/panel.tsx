@@ -1,14 +1,14 @@
 import { KeyToMoveMap } from "utils/cube-move";
-import FiveSecondChallengeButton from "./challenge/five-second";
-import StandardChallengeButton from "./challenge/standard";
+
 import style from "./style.module.scss";
-import magicCube from "~/services/magic-cube";
+import magicCube from "~/magic-cube/services/magic-cube";
+import FiveSecondChallengeButton from "./buttons/game-five-second-btn";
+import StandardChallengeButton from "./buttons/game-standard-btn";
+import { useCube } from "./providers/magic-cube.provider";
 
-type Props = {
-  connected: boolean;
-};
+function Panel() {
+  const { connected } = useCube();
 
-function Panel({ connected }: Props) {
   return (
     <div className={style.panel}>
       <div className={style.gameModePanel}>

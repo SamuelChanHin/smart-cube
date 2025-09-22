@@ -1,6 +1,10 @@
 import React from "react";
 
-function Cube({ position }) {
+type Props = {
+  position: [number, number, number];
+};
+
+function Cube({ position }: Props) {
   const colors = ["red", "orange", "white", "yellow", "green", "blue"]; // R L U D F B
   return (
     <>
