@@ -29,6 +29,12 @@ function useCube() {
   const [loading, setLoading] = useState(false);
   const [connected, setConnected] = useState(false);
   const [cubeName, setCubeName] = useState<string | undefined>(undefined);
+  const [quaternion, setQuaternion] = useState<{
+    x: number;
+    y: number;
+    z: number;
+    w: number;
+  } | null>(null);
 
   const connect = async () => {
     console.log("Connecting to GAN Cube...");
@@ -49,7 +55,6 @@ function useCube() {
         } else if (event.type == "MOVE") {
           magicCube.pushQueue(event.move as Move);
         } else if (event.type === "FACELETS") {
-          console.log(event.facelets);
           if (
             event.facelets ===
             "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB"
@@ -58,6 +63,10 @@ function useCube() {
           } else {
             magicCube.updateCompleteness(false);
           }
+        } else if (event.type === "GYRO") {
+          // Handle gyroscope data if needed
+          console.log("Gyro data:", event);
+          setQuaternion(event.quaternion);
         }
       });
 
@@ -75,6 +84,7 @@ function useCube() {
     cubeName,
     loading,
     connected,
+    quaternion,
   };
 }
 

@@ -8,7 +8,7 @@ import style from "./style.module.scss";
 import { useCubeKeyboard } from "~/hook/useCubeKeyboard";
 
 function MagicCube() {
-  const { connect, cubeName, loading, connected } = useCube();
+  const { connect, cubeName, loading, connected, quaternion } = useCube();
   useCubeKeyboard();
 
   const childRef = useRef<RubikHandle>(null);
@@ -36,9 +36,9 @@ function MagicCube() {
       <div className={style.fullscreen}>
         <Canvas shadows camera={{ position: [10, 10, 15], fov: 30 }}>
           <OrbitControls />
-          <ambientLight intensity={0.5} />
+          <ambientLight intensity={1} />
           <pointLight position={[10, 10, 10]} />
-          <Rubik ref={childRef} />
+          <Rubik ref={childRef} quaternion={quaternion} />
         </Canvas>
       </div>
 

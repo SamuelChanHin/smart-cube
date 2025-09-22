@@ -1,6 +1,8 @@
+import { KeyToMoveMap } from "utils/cube-move";
 import FiveSecondChallengeButton from "./challenge/five-second";
 import StandardChallengeButton from "./challenge/standard";
 import style from "./style.module.scss";
+import magicCube from "~/services/magic-cube";
 
 type Props = {
   connected: boolean;
@@ -13,7 +15,7 @@ function Panel({ connected }: Props) {
         <FiveSecondChallengeButton connected={connected} />
         <StandardChallengeButton connected={connected} />
       </div>
-      {/* <div className={style.rubikBtnPanel}>
+      <div className={style.rubikBtnPanel}>
         {Object.entries(KeyToMoveMap).map(([key, move]) => (
           <button
             key={move}
@@ -23,7 +25,7 @@ function Panel({ connected }: Props) {
             {key}={move}
           </button>
         ))}
-      </div> */}
+      </div>
     </div>
   );
 }
