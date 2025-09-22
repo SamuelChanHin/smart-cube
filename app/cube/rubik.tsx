@@ -29,6 +29,8 @@ const Rubik = forwardRef<RubikHandle, Props>(({ quaternion }, childRef) => {
   useFrame(() => {
     JEASINGS.update();
 
+    // ref.current!.rotation.z = (0 * Math.PI) / 2;
+
     if (quaternion) {
       let quat = new THREE.Quaternion(
         quaternion.x,
@@ -36,9 +38,12 @@ const Rubik = forwardRef<RubikHandle, Props>(({ quaternion }, childRef) => {
         -quaternion.y,
         quaternion.w
       ).normalize();
-      ref.current!.rotation.x = quat.x;
-      ref.current!.rotation.z = quat.z;
-      ref.current!.rotation.y = quat.y;
+
+      const euler = new THREE.Euler().setFromQuaternion(quat, "XYZ"); // You can use other rotation orders if needed
+
+      ref.current!.rotation.x = euler.x;
+      ref.current!.rotation.y = euler.y;
+      ref.current!.rotation.z = euler.z;
     }
   });
 
