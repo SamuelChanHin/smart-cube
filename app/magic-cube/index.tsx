@@ -12,9 +12,6 @@ import TopBar from "./topbar";
 function MagicCube() {
   const { resetCube } = useCube();
 
-  // enable keypress for cube moves
-  useCubeKeyboard();
-
   const rubikRef = useRef<RubikHandle>(null);
 
   const reset = () => {

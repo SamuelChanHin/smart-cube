@@ -3,6 +3,12 @@ import type { Mesh } from "three";
 import { delay } from "utils/delay";
 import type { Move } from "../types/types";
 
+enum Layout {
+  MIDDLE = 0,
+  SIDE = 0.5,
+  DUAL = 1,
+}
+
 class MagicCube3DService {
   // This queue only for 3D cube rotation
   private queue: Move[] = [];
@@ -25,59 +31,89 @@ class MagicCube3DService {
 
     // Forward rotation for back face
     if (move === "L") {
-      this.rotate(ref, rotationGroup, "x", -0.5, 1, callback);
+      this.rotate(ref, rotationGroup, "x", -Layout.SIDE, 1, callback);
     }
     // Reverse rotation for back face
     if (move === "L'") {
-      this.rotate(ref, rotationGroup, "x", -0.5, -1, callback);
-    }
-    // Forward rotation for left face
-    if (move === "L") {
-      this.rotate(ref, rotationGroup, "x", -0.5, 1, callback);
-    }
-    // Reverse rotation for left face
-    if (move === "L'") {
-      this.rotate(ref, rotationGroup, "x", -0.5, -1, callback);
+      this.rotate(ref, rotationGroup, "x", -Layout.SIDE, -1, callback);
     }
     // Reverse rotation for right face
     if (move === "R") {
-      this.rotate(ref, rotationGroup, "x", 0.5, -1, callback);
+      this.rotate(ref, rotationGroup, "x", Layout.SIDE, -1, callback);
     }
     // Forward rotation for right face
     if (move === "R'") {
-      this.rotate(ref, rotationGroup, "x", 0.5, 1, callback);
+      this.rotate(ref, rotationGroup, "x", Layout.SIDE, 1, callback);
+    }
+    if (move === "r") {
+      this.rotate(ref, rotationGroup, "x", Layout.DUAL, -1, callback);
+    }
+    if (move === "r'") {
+      this.rotate(ref, rotationGroup, "x", Layout.DUAL, 1, callback);
     }
     // Forward rotation for down face
     if (move === "D") {
-      this.rotate(ref, rotationGroup, "y", -0.5, 1, callback);
+      this.rotate(ref, rotationGroup, "y", -Layout.SIDE, 1, callback);
     }
     // Reverse rotation for down face
     if (move === "D'") {
-      this.rotate(ref, rotationGroup, "y", -0.5, -1, callback);
+      this.rotate(ref, rotationGroup, "y", -Layout.SIDE, -1, callback);
     }
     // Reverse rotation for up face
     if (move === "U") {
-      this.rotate(ref, rotationGroup, "y", 0.5, -1, callback);
+      this.rotate(ref, rotationGroup, "y", Layout.SIDE, -1, callback);
     }
     // Forward rotation for up face
     if (move === "U'") {
-      this.rotate(ref, rotationGroup, "y", 0.5, 1, callback);
+      this.rotate(ref, rotationGroup, "y", Layout.SIDE, 1, callback);
+    }
+    if (move === "u") {
+      this.rotate(ref, rotationGroup, "y", Layout.DUAL, -1, callback);
+    }
+    if (move === "u'") {
+      this.rotate(ref, rotationGroup, "y", Layout.DUAL, 1, callback);
     }
     // Reverse rotation for front face
     if (move === "F") {
-      this.rotate(ref, rotationGroup, "z", 0.5, -1, callback);
+      this.rotate(ref, rotationGroup, "z", Layout.SIDE, -1, callback);
     }
     // Forward rotation for front face
     if (move === "F'") {
-      this.rotate(ref, rotationGroup, "z", 0.5, 1, callback);
+      this.rotate(ref, rotationGroup, "z", Layout.SIDE, 1, callback);
+    }
+    if (move === "f") {
+      this.rotate(ref, rotationGroup, "z", Layout.DUAL, -1, callback);
+    }
+    if (move === "f'") {
+      this.rotate(ref, rotationGroup, "z", Layout.DUAL, 1, callback);
     }
     // Forward rotation for back face
     if (move === "B") {
-      this.rotate(ref, rotationGroup, "z", -0.5, 1, callback);
+      this.rotate(ref, rotationGroup, "z", -Layout.SIDE, 1, callback);
     }
     // Reverse rotation for back face
     if (move === "B'") {
-      this.rotate(ref, rotationGroup, "z", -0.5, -1, callback);
+      this.rotate(ref, rotationGroup, "z", -Layout.SIDE, -1, callback);
+    }
+
+    // Reverse rotation for back face
+    if (move === "M") {
+      this.rotate(ref, rotationGroup, "x", Layout.MIDDLE, 1, callback);
+    }
+
+    // Forward rotation for back face
+    if (move === "M'") {
+      this.rotate(ref, rotationGroup, "x", Layout.MIDDLE, -1, callback);
+    }
+
+    // Reverse rotation for back face
+    if (move === "S") {
+      this.rotate(ref, rotationGroup, "z", Layout.MIDDLE, -1, callback);
+    }
+
+    // Forward rotation for back face
+    if (move === "S'") {
+      this.rotate(ref, rotationGroup, "z", Layout.MIDDLE, 1, callback);
     }
   }
 
@@ -105,7 +141,17 @@ class MagicCube3DService {
       .slice()
       .reverse()
       .filter(function (c) {
-        return limit < 0 ? c.position[axis] < limit : c.position[axis] > limit;
+        if (limit === Layout.MIDDLE) {
+          return c.position[axis] === limit;
+        }
+        if (Math.abs(limit) === Layout.SIDE) {
+          return limit < 0
+            ? c.position[axis] < limit
+            : c.position[axis] > limit;
+        }
+        if (Math.abs(limit) === Layout.DUAL) {
+          return limit >= 0 ? c.position[axis] >= 0 : c.position[axis] <= 0;
+        }
       })
       .forEach(function (c) {
         rotationGroup.attach(c);

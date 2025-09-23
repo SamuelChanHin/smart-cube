@@ -8,10 +8,6 @@ import {
 import magicCube from "~/magic-cube/services/magic-cube";
 import type { Move } from "../types/types";
 
-const FiveSecondChallengeContext = createContext<
-  FiveSecondChallengeContextType | undefined
->(undefined);
-
 type FiveSecondChallengeContextType = {
   isStarted: boolean;
   timeLeft: number;
@@ -22,15 +18,21 @@ type FiveSecondChallengeContextType = {
   tps: number;
 };
 
-export const useFiveSecondChallenge = () => {
-  const context = useContext(FiveSecondChallengeContext);
-  if (!context) {
-    throw new Error(
-      "useFiveSecondChallenge must be used within a FiveSecondChallengeProvider"
-    );
-  }
-  return context;
+const defaultContext: FiveSecondChallengeContextType = {
+  isStarted: false,
+  timeLeft: 5,
+  prestartTimeLeft: 0,
+  startChallenge: () => {},
+  isPrestart: false,
+  count: 0,
+  tps: 0,
 };
+
+const FiveSecondChallengeContext =
+  createContext<FiveSecondChallengeContextType>(defaultContext);
+
+export const useFiveSecondChallenge = () =>
+  useContext<FiveSecondChallengeContextType>(FiveSecondChallengeContext);
 
 export const FiveSecondChallengeProvider: React.FC<{
   children: React.ReactNode;

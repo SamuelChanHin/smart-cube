@@ -9,10 +9,6 @@ import magicCube from "~/magic-cube/services/magic-cube";
 import type { Move } from "../types/types";
 import { useCube } from "./magic-cube.provider";
 
-const StandardChallengeContext = createContext<
-  StandardChallengeContextType | undefined
->(undefined);
-
 type StandardChallengeContextType = {
   isStarted: boolean;
   startChallenge: () => void;
@@ -23,15 +19,21 @@ type StandardChallengeContextType = {
   isPrestart: boolean;
 };
 
-export const useStandardChallenge = () => {
-  const context = useContext(StandardChallengeContext);
-  if (!context) {
-    throw new Error(
-      "useStandardChallenge must be used within a StandardChallengeProvider"
-    );
-  }
-  return context;
+const defaultValue: StandardChallengeContextType = {
+  isStarted: false,
+  startChallenge: () => {},
+  count: 0,
+  timer: 0,
+  tps: 0,
+  prestartTimeLeft: 0,
+  isPrestart: false,
 };
+
+const StandardChallengeContext =
+  createContext<StandardChallengeContextType>(defaultValue);
+
+export const useStandardChallenge = () =>
+  useContext<StandardChallengeContextType>(StandardChallengeContext);
 
 export const StandardChallengeProvider: React.FC<{
   children: React.ReactNode;

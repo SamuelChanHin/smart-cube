@@ -26,6 +26,11 @@
     min-height: 250px;
     padding: 16px;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #222;
+    gap: 12px;
 
     .gameModePanel {
       margin-bottom: 12px;
@@ -34,8 +39,21 @@
       gap: 12px;
     }
 
-    .rubikBtnPanel {
+    .topFaceColorSelectPanel {
+      margin-bottom: 12px;
       display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .moveInputPanel {
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .rubikBtnPanel {
       justify-content: center;
       display: flex;
       flex-wrap: wrap;
@@ -52,6 +70,10 @@
     &.disabled {
       opacity: 0.5;
       pointer-events: none;
+    }
+
+    &.square {
+      aspect-ratio: 1 / 1;
     }
   }
 

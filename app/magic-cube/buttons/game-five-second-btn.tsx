@@ -30,9 +30,9 @@ function FiveSecondChallengeButton({ connected }: Props) {
       )}
       <button
         className={clsx(style.actionBtn, {
-          // [style.disabled]: !connected || isStarted || isPrestart,
+          [style.disabled]: !connected || isStarted || isPrestart,
         })}
-        // disabled={!connected || isStarted || isPrestart}
+        disabled={!connected || isStarted || isPrestart}
         onClick={startChallenge}
       >
         {"5 Seconds Challenge"}

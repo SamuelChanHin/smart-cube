@@ -14,6 +14,7 @@ export type RubikHandle = {
 };
 
 const Rubik = forwardRef<RubikHandle, Props>((_, childRef) => {
+  const { topFaceColor } = useCube();
   // ref for entire cube
   const cubeRef = useRef<Mesh | null>(null);
 
@@ -30,6 +31,20 @@ const Rubik = forwardRef<RubikHandle, Props>((_, childRef) => {
       magicCube3d.resetAll(ref.current!, rotationGroup.current!);
     },
   }));
+
+  useEffect(() => {
+    if (topFaceColor === "yellow") {
+      const euler = new THREE.Euler(Math.PI, Math.PI, 0, "XYZ"); // 180 degrees around the X-axis
+      cubeRef.current!.rotation.x = euler.x;
+      cubeRef.current!.rotation.y = euler.y;
+      cubeRef.current!.rotation.z = euler.z;
+    } else {
+      const euler = new THREE.Euler(0, 0, 0, "XYZ"); // 180 degrees around the X-axis
+      cubeRef.current!.rotation.x = euler.x;
+      cubeRef.current!.rotation.y = euler.y;
+      cubeRef.current!.rotation.z = euler.z;
+    }
+  }, [topFaceColor]);
 
   useFrame(() => {
     JEASINGS.update();

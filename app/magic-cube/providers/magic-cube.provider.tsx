@@ -12,6 +12,7 @@ import {
 } from "gan-web-bluetooth";
 import magicCube from "~/magic-cube/services/magic-cube";
 import type { Move } from "../types/types";
+import type { TopFaceColor } from "../constants/color";
 
 const INITIAL_FACELETS =
   "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
@@ -47,9 +48,24 @@ type CubeContextType = {
   cubeName?: string;
   quaternion: { x: number; y: number; z: number; w: number } | null;
   isCompleted: boolean;
+  topFaceColor: TopFaceColor;
+  setTopFaceColor: React.Dispatch<React.SetStateAction<TopFaceColor>>;
 };
 
-const CubeContext = createContext<CubeContextType | undefined>(undefined);
+const DefaultContext: CubeContextType = {
+  connect: async () => {},
+  disconnect: async () => {},
+  resetCube: () => {},
+  connecting: false,
+  connected: false,
+  cubeName: undefined,
+  quaternion: null,
+  isCompleted: false,
+  topFaceColor: "white",
+  setTopFaceColor: () => {},
+};
+
+const CubeContext = createContext<CubeContextType>(DefaultContext);
 
 export const CubeProvider = ({ children }: { children: ReactNode }) => {
   const [conn, setConn] = useState<GanCubeConnection | null>(null);
@@ -65,6 +81,8 @@ export const CubeProvider = ({ children }: { children: ReactNode }) => {
     z: number;
     w: number;
   } | null>(null);
+
+  const [topFaceColor, setTopFaceColor] = useState<TopFaceColor>("white");
 
   const connect = async () => {
     if (connecting) return;
@@ -166,6 +184,8 @@ export const CubeProvider = ({ children }: { children: ReactNode }) => {
         connected,
         quaternion,
         isCompleted,
+        topFaceColor,
+        setTopFaceColor,
       }}
     >
       {children}
@@ -173,10 +193,4 @@ export const CubeProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useCube = () => {
-  const context = useContext(CubeContext);
-  if (!context) {
-    throw new Error("useCube must be used within a CubeProvider");
-  }
-  return context;
-};
+export const useCube = () => useContext<CubeContextType>(CubeContext);
