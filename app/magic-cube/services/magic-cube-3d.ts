@@ -141,19 +141,19 @@ class MagicCube3DService {
       .slice()
       .reverse()
       .filter(function (c) {
+        const position = +c.position[axis].toFixed(1);
         if (limit === Layout.MIDDLE) {
-          return c.position[axis] === limit;
+          return position === limit;
         }
         if (Math.abs(limit) === Layout.SIDE) {
-          return limit < 0
-            ? c.position[axis] < limit
-            : c.position[axis] > limit;
+          return limit < 0 ? position < limit : position > limit;
         }
         if (Math.abs(limit) === Layout.DUAL) {
-          return limit >= 0 ? c.position[axis] >= 0 : c.position[axis] <= 0;
+          return limit >= 0 ? position >= 0 : position <= 0;
         }
       })
       .forEach(function (c) {
+        console.log(c);
         rotationGroup.attach(c);
       });
   };
