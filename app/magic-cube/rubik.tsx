@@ -11,6 +11,8 @@ type Props = {};
 
 export type RubikHandle = {
   resetAll: () => void;
+  rotateX: () => void;
+  rotateY: () => void;
 };
 
 const Rubik = forwardRef<RubikHandle, Props>((_, childRef) => {
@@ -30,21 +32,19 @@ const Rubik = forwardRef<RubikHandle, Props>((_, childRef) => {
     resetAll: () => {
       magicCube3d.resetAll(ref.current!, rotationGroup.current!);
     },
+    rotateY: () => {
+      const euler = new THREE.Euler(0, Math.PI / 2, 0, "XYZ"); // 90 degrees around the Z-axis
+      cubeRef.current!.rotation.x += euler.x;
+      cubeRef.current!.rotation.y += euler.y;
+      cubeRef.current!.rotation.z += euler.z;
+    },
+    rotateX: () => {
+      const euler = new THREE.Euler(Math.PI / 2, 0, 0, "XYZ"); // 90 degrees around the Y-axis
+      cubeRef.current!.rotation.x += euler.x;
+      cubeRef.current!.rotation.y += euler.y;
+      cubeRef.current!.rotation.z += euler.z;
+    },
   }));
-
-  useEffect(() => {
-    if (topFaceColor === "yellow") {
-      const euler = new THREE.Euler(Math.PI, Math.PI, 0, "XYZ"); // 180 degrees around the X-axis
-      cubeRef.current!.rotation.x = euler.x;
-      cubeRef.current!.rotation.y = euler.y;
-      cubeRef.current!.rotation.z = euler.z;
-    } else {
-      const euler = new THREE.Euler(0, 0, 0, "XYZ"); // 180 degrees around the X-axis
-      cubeRef.current!.rotation.x = euler.x;
-      cubeRef.current!.rotation.y = euler.y;
-      cubeRef.current!.rotation.z = euler.z;
-    }
-  }, [topFaceColor]);
 
   useFrame(() => {
     JEASINGS.update();

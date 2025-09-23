@@ -8,8 +8,14 @@ import { movePattern } from "./constants/regex";
 import { useCube } from "./providers/magic-cube.provider";
 import style from "./style.module.scss";
 import type { Move } from "./types/types";
+import Icon from "~/icons/Icon";
 
-function Panel() {
+type Props = {
+  rotateX: () => void;
+  rotateY: () => void;
+};
+
+function Panel({ rotateX, rotateY }: Props) {
   const { connected, setTopFaceColor, topFaceColor } = useCube();
 
   // enable keypress for cube moves
@@ -46,7 +52,7 @@ function Panel() {
         <form onSubmit={handleInputSubmit}>
           <input
             type="text"
-            placeholder="Enter your move"
+            placeholder="Enter your algorithm"
             pattern={movePattern}
             title={`Moves must be one of: ${Object.values(KeyToMoveMap).join(", ")} optionally followed by 2 or 3`}
             className={style.moveInput}
@@ -67,6 +73,16 @@ function Panel() {
             </option>
           ))}
         </select>
+
+        {/* Here arrow-top but rotate Y refer to axis.png  */}
+        {/* <button className={style.actionBtn} onClick={rotateX}>
+          <Icon type="arrow-top" className={style.icon} />
+        </button> */}
+
+        {/* Here arrow-right but rotate Y refer to axis.png  */}
+        {/* <button className={style.actionBtn} onClick={rotateY}>
+          <Icon type="arrow-right" className={style.icon} />
+        </button> */}
       </div>
 
       <div className={style.gameModePanel}>
@@ -74,7 +90,7 @@ function Panel() {
         <StandardChallengeButton connected={connected} />
       </div>
 
-      <div className={style.rubikBtnPanel}>
+      {/* <div className={style.rubikBtnPanel}>
         {Object.entries(KeyToMoveMap).map(([key, move]) => (
           <button
             key={move}
@@ -84,7 +100,7 @@ function Panel() {
             {key}={move}
           </button>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }

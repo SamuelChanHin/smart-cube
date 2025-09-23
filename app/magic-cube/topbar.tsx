@@ -1,6 +1,7 @@
 import React from "react";
 import style from "./style.module.scss";
 import { useCube } from "./providers/magic-cube.provider";
+import Icon from "~/icons/Icon";
 
 type Props = {
   reset: () => void;

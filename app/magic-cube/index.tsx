@@ -1,7 +1,6 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useRef } from "react";
-import { useCubeKeyboard } from "~/magic-cube/hook/useCubeKeyboard";
 import Panel from "./panel";
 import { useCube } from "./providers/magic-cube.provider";
 import Rubik, { type RubikHandle } from "./rubik";
@@ -25,6 +24,14 @@ function MagicCube() {
     magicCube.clearQueue();
   };
 
+  const rotateX = () => {
+    rubikRef.current!.rotateX();
+  };
+
+  const rotateY = () => {
+    rubikRef.current!.rotateY();
+  };
+
   return (
     <div className={style.container}>
       <TopBar reset={reset} />
@@ -38,7 +45,7 @@ function MagicCube() {
         </Canvas>
       </div>
 
-      <Panel />
+      <Panel rotateX={rotateX} rotateY={rotateY} />
     </div>
   );
 }

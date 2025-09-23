@@ -43,6 +43,7 @@
       margin-bottom: 12px;
       display: flex;
       justify-content: center;
+      align-items: center;
       gap: 8px;
     }
 
@@ -74,6 +75,12 @@
 
     &.square {
       aspect-ratio: 1 / 1;
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
+      background-color: white;
     }
   }
 
